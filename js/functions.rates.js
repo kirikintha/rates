@@ -1,9 +1,6 @@
 /**
- * Property Availability JS - takes an object
- *   Drupal.propertyAvailability = {
-    '01-01-2010' : 'unavailable'
-  }
- * 
+ * Rates JS
+ * Checks for invalid date ranges from the end user, and rebinds after CCK add another item ahah
  */
 if (Drupal.jsEnabled) {
 	
