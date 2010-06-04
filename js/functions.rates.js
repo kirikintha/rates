@@ -18,7 +18,7 @@ if (Drupal.jsEnabled) {
     function _rebindElements() {
       
       //When we blur the field, We have to sanity check here, that this date does not conflict with it's corresponding to/from date
-      $('div.property-rates-widget input.form-text').bind( 'change', function () {
+      $('div.rates-widget input.form-text').bind( 'change', function () {
         
         //Find out which field we are looking
         //Drupal.trace( $(this).parent('div').parent('div').children('div').children('input') );
