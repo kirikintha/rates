@@ -1,0 +1,333 @@
+<?php
+/**
+ * Property Rates
+ * Adds a custom CCK widget for property Rates, and allows for full views integration
+ */
+
+define( "RATES_MODULE_PATH", drupal_get_path( 'module', 'rates' ) );
+
+/**
+ * Hook Init
+ */
+function rates_init() { //load js calendar listener
+  
+  drupal_add_js( RATES_MODULE_PATH. '/js/functions.rates.js','module','header' );
+  
+}
+
+/**
+ * Hook Theme
+ */
+function rates_theme() {
+	
+	return array (
+    //Module Theme via tpl
+		'rate_display' => array (
+      'path'      => RATES_MODULE_PATH,
+      'template'  => 'theme/rate_display',
+			'arguments' => array( 'begin_date'=> NULL, 'end_date'=> NULL, 'week_night'=> NULL, 'weekend_night'=> NULL, 'weekly_rate'=> NULL, 'mothly_rate'=> NULL, 'minimum_stay'=> NULL )
+		),
+    //CCK theme formatters.
+    'rates_formatter_default' => array(
+      'arguments' => array( 'element' => NULL )
+    ),
+    'rates' => array(
+      'arguments' => array( 'element' => NULL )
+    )
+	);
+	
+}
+
+//==========================================//
+// CONTENT FIELD WIDGET (CCK)
+//==========================================//
+
+/**
+ * Implementation of hook_field_info().
+ */
+function rates_field_info() {
+  
+  return array(
+    'rates' => array(
+      'label'       => t('Rate Field'),
+      'description' => t('Stores a compound field that has a Begin Date, End Date, Week Night, Weekend Night, Weekly, Monthly, Minimum Stay elements.')
+    )
+  );
+  
+}
+
+/**
+ * Implementation of hook_field_settings().
+ */
+function rates_field_settings( $op, $field ) {
+  
+  switch ( $op ) {
+    
+    case 'database columns':
+      return array(
+        'begin_date'    => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'end_date'      => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'week_night'    => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'weekend_night' => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'weekly_rate'   => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'monthly_rate'  => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE ),
+        'minimum_stay'  => array( 'type' => 'varchar', 'length' => 255, 'not null' => FALSE, 'sortable' => FALSE, 'views' => FALSE )
+      );
+
+  }
+  
+}
+
+/**
+ * Implementation of hook_content_is_empty().
+ */
+function rates_content_is_empty( $item, $field ) {
+  
+  if ( empty( $item['begin_date'] ) || empty( $item['end_date'] ) ) {
+    
+    return TRUE;
+  
+  }
+  
+  return FALSE;
+
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function rates_field_formatter_info() {
+  
+  return array(
+    'default' => array(
+      'label'           => t('Default'),
+      'field types'     => array('rates'),
+      'multiple values' => CONTENT_HANDLE_CORE
+    )
+  );
+  
+}
+
+/**
+ * Theme function for 'default' example field formatter.
+ *
+ * $element['#item']: the sanitized $delta value for the item,
+ * $element['#field_name']: the field name,
+ * $element['#type_name']: the $node->type,
+ * $element['#formatter']: the $formatter_name,
+ * $element'#node']: the $node,
+ * $element['#delta']: the delta of this item, like '0',
+ *
+ */
+function theme_rates_formatter_default( $element ) {
+  
+  if ( !empty( $element['#item']['begin_date'] ) && !empty( $element['#item']['end_date'] ) ) { //If we don't have a legitimate rate, then don't do it!
+    
+    return theme( 'rate_display',
+                 $element['#item']['begin_date'],
+                 $element['#item']['end_date'],
+                 $element['#item']['week_night'],
+                 $element['#item']['weekend_night'],
+                 $element['#item']['weekly_rate'],
+                 $element['#item']['monthly_rate'],
+                 $element['#item']['minimum_stay'] );
+    
+  }
+
+}
+
+/**
+ * FAPI theme for an individual widget from the individual element.
+ */
+function theme_rates( $element ) {
+  
+  $output = '<div class="rates-widget">';
+  $output .= theme( 'textfield', $element['begin_date'] );
+  $output .= theme( 'textfield', $element['end_date'] );
+  $output .= theme( 'textfield', $element['week_night'] );
+  $output .= theme( 'textfield', $element['weekend_night'] );
+  $output .= theme( 'textfield', $element['weekly_rate'] );
+  $output .= theme( 'textfield', $element['monthly_rate'] );
+  $output .= theme( 'textfield', $element['minimum_stay'] );
+  $output .= '</div>';
+  
+  return $output;
+
+}
+
+/**
+ * Implementation of FAPI hook_elements().
+ *
+ * Any FAPI callbacks needed for individual widgets can be declared here,
+ * and the element will be passed to those callbacks for processing.
+ *
+ * Drupal will automatically theme the element using a theme with
+ * the same name as the hook_elements key.
+ *
+ * Autocomplete_path is not used by text_widget but other widgets can use it
+ * (see nodereference and userreference).
+ */
+function rates_elements() {
+  
+  $elements = array(
+    'rates' => array(
+      '#input'   => TRUE,
+      '#process' => array('rates_process')
+    )
+  );
+  
+  return $elements;
+
+}
+
+/**
+ * Implementation of hook_widget_info().
+ *
+ * Here we indicate that the content module will handle
+ * the default value and multiple values for these widgets.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function rates_widget_info() {
+  
+  return array(
+    'rates' => array(
+      'label'           => 'Rate Field',
+      'field types'     => array('rates'),
+      'multiple values' => CONTENT_HANDLE_CORE
+    )
+  );
+  
+}
+
+/**
+ * Implementation of hook_widget().
+ *
+ * Attach a single form element to the form. It will be built out and
+ * validated in the callback(s) listed in hook_elements. We build it
+ * out in the callbacks rather than here in hook_widget so it can be
+ * plugged into any module that can provide it with valid
+ * $field information.
+ *
+ * Content module will set the weight, field name and delta values
+ * for each form element. This is a change from earlier CCK versions
+ * where the widget managed its own multiple values.
+ *
+ * If there are multiple values for this field, the content module will
+ * call this function as many times as needed.
+ *
+ * @param $form
+ *   the entire form array, $form['#node'] holds node information
+ * @param $form_state
+ *   the form_state, $form_state['values'][$field['field_name']]
+ *   holds the field's form values.
+ * @param $field
+ *   the field array
+ * @param $items
+ *   array of default values for this field
+ * @param $delta
+ *   the order of this item in the array of subelements (0, 1, 2, etc)
+ *
+ * @return
+ *   the form item for a single element for this field
+ */
+function rates_widget( &$form, &$form_state, $field, $items, $delta = 0 ) {
+  
+  $element = array(
+    '#type'          => $field['widget']['type'],
+    '#default_value' => isset( $items[$delta] ) ? $items[$delta] : '',
+    '#title'         => $field['widget']['label'],
+    '#field'         => $field,
+  );
+  
+  return $element;
+
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $fields array is in $form['#field_info'][$element['#field_name']].
+ */
+function rates_process( $element, $edit, $form_state, $form ) {
+  
+  //Load in necessary date_popup files
+  date_popup_load();
+  
+  //Form CSS
+  drupal_add_css( RATES_MODULE_PATH . '/css/form.css' );
+  
+  $settings = array(
+    'prevText'        => '&lt;'. date_t('Prev', 'date_nav'),
+    'nextText'        => date_t('Next', 'date_nav') .'&gt;',
+    'currentText'     => date_t('Today', 'date_nav'),
+    'clearText'       => t('Clear'),
+    'closeText'       => t('Close'),
+    'firstDay'        => intval(variable_get('date_first_day', 0)),
+    'dayNames'        => date_week_days(TRUE),
+    'dayNamesShort'   => date_week_days_abbr(TRUE, TRUE, 3),
+    'dayNamesMin'     => date_week_days_abbr(TRUE, TRUE, 2),
+    'monthNames'      => array_values(date_month_names(TRUE)),
+    'monthNamesShort' => array_values(date_month_names_abbr(TRUE)),
+    'autoPopUp'       => 'focus',
+    'closeAtTop'      => FALSE,
+    'speed'           => 'immediate',
+    'dateFormat'      => date_popup_format_to_popup('m/d/Y', 'datepicker'),
+    'yearRange'       => '-0:+0'
+  );  
+  
+  $element['begin_date'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Begin Date'),
+    '#maxlength'     => 12,
+    '#default_value' => isset( $element['#value']['begin_date'] ) ? $element['#value']['begin_date'] : NULL,
+    '#id'            => date_popup_js_settings_id( 0, 'datepicker', $settings )
+  );
+  
+  $element['end_date'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('End Date'),
+    '#maxlength'     => 12,
+    '#default_value' => isset( $element['#value']['end_date'] ) ? $element['#value']['end_date'] : NULL,
+    '#id'            => date_popup_js_settings_id( 1, 'datepicker', $settings )
+  );
+  
+  $element['week_night'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Week Night'),
+    '#default_value' => isset( $element['#value']['week_night'] ) ? $element['#value']['week_night'] : NULL
+  );
+  
+  $element['weekend_night'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Weekend Night'),
+    '#default_value' => isset( $element['#value']['weekend_night'] ) ? $element['#value']['weekend_night'] : NULL
+  );
+  
+  $element['weekly_rate'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Weekly Rate'),
+    '#default_value' => isset( $element['#value']['weekly_rate'] ) ? $element['#value']['weekly_rate'] : NULL
+  );
+  
+  $element['monthly_rate'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Monthly Rate'),
+    '#default_value' => isset( $element['#value']['monthly_rate'] ) ? $element['#value']['monthly_rate'] : NULL
+  );
+  
+  $element['minimum_stay'] = array(
+    '#type'          => 'textfield',
+    '#title'         => t('Mimimum Stay'),
+    '#default_value' => isset( $element['#value']['minimum_stay'] ) ? $element['#value']['minimum_stay'] : NULL
+  );
+  
+  return $element;
+
+}

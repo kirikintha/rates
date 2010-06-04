@@ -1,0 +1,6 @@
+name           = "Rates"
+description    = "Allows Users To create Flexible Rates from a custom CCK widget."
+version        = 1.0
+dependencies[] = date_popup
+package        = "Content"
+core           = "6.x"

@@ -1,0 +1,9 @@
+/**
+ * Node Form CSS
+ * @todo make this look nicer on the form
+ */
+div.rates-widget .form-item {
+  float:left;
+  margin:0 20px;
+  width:120px !important;
+}

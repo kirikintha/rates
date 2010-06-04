@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @name _property_rates_notify()
+ * Common function for notifying the content module of this module's existence
+ */
+function _rates_notify() {
+  
+  drupal_load( 'module', 'content' );
+  content_notify( 'enable', 'rates' );
+  
+}
+
+/**
+ * Implementation of hook_install.
+ */
+function rates_install() {
+  
+  _rates_notify();
+  
+  drupal_set_message( t('Rates Module has installed successfully. Please see README.txt for more information on this module.') );
+  
+}
+
+/**
+ * Implementation of hook_uninstall.
+ */
+function rates_uninstall() {
+  
+  _rates_notify();
+  
+  drupal_set_message( t('Rates Module uninstalled successfully. You have not deleted any content, this has to be performed on your own.') );
+  
+}
+
+/**
+ * Implementation of hook_enable.
+ */
+function rates_enable() {
+  
+  _rates_notify();
+  
+  drupal_set_message( t('Rates Module has been enabled successfully.') );
+  
+}
+
+/**
+ * Implementation of hook_disable.
+ */
+function rates_disable() {
+  
+  _rates_notify();
+  
+  drupal_set_message( t('Rates Module has been disabled successfully.') );
+  
+}
