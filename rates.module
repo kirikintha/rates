@@ -142,13 +142,15 @@ function theme_rates_formatter_default( $element ) {
 function theme_rates( $element ) {
   
   $output = '<div class="rates-widget">';
+  $output .= '<h4 class="rates-widget-title">Dates and Minimum Stay</h4>';
   $output .= theme( 'textfield', $element['begin_date'] );
   $output .= theme( 'textfield', $element['end_date'] );
+  $output .= theme( 'textfield', $element['minimum_stay'] );
+  $output .= '<h4 class="rates-widget-title">Rates</h4>';
   $output .= theme( 'textfield', $element['week_night'] );
   $output .= theme( 'textfield', $element['weekend_night'] );
   $output .= theme( 'textfield', $element['weekly_rate'] );
   $output .= theme( 'textfield', $element['monthly_rate'] );
-  $output .= theme( 'textfield', $element['minimum_stay'] );
   $output .= '</div>';
   
   return $output;
@@ -254,6 +256,8 @@ function rates_widget( &$form, &$form_state, $field, $items, $delta = 0 ) {
  * note that $element['#value'] is already set.
  *
  * The $fields array is in $form['#field_info'][$element['#field_name']].
+ *
+ * @todo = figure out why when you set a default value in the form, it is nt populating properly
  */
 function rates_process( $element, $edit, $form_state, $form ) {
   
@@ -287,7 +291,8 @@ function rates_process( $element, $edit, $form_state, $form ) {
     '#title'         => t('Begin Date'),
     '#maxlength'     => 12,
     '#default_value' => isset( $element['#value']['begin_date'] ) ? $element['#value']['begin_date'] : NULL,
-    '#id'            => date_popup_js_settings_id( 0, 'datepicker', $settings )
+    '#id'            => date_popup_js_settings_id( 0, 'datepicker', $settings ),
+    '#attributes'    => array( 'class' => 'rate-widget-begin-date' )
   );
   
   $element['end_date'] = array(
@@ -295,37 +300,43 @@ function rates_process( $element, $edit, $form_state, $form ) {
     '#title'         => t('End Date'),
     '#maxlength'     => 12,
     '#default_value' => isset( $element['#value']['end_date'] ) ? $element['#value']['end_date'] : NULL,
-    '#id'            => date_popup_js_settings_id( 1, 'datepicker', $settings )
+    '#id'            => date_popup_js_settings_id( 1, 'datepicker', $settings ),
+    '#attributes'    => array( 'class' => 'rate-widget-end-date' )
   );
   
   $element['week_night'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Week Night'),
-    '#default_value' => isset( $element['#value']['week_night'] ) ? $element['#value']['week_night'] : NULL
+    '#default_value' => isset( $element['#value']['week_night'] ) ? $element['#value']['week_night'] : NULL,
+    '#attributes'    => array( 'class' => 'rate-widget-rate-field' )
   );
   
   $element['weekend_night'] = array(
     '#type'          => 'textfield',
     '#title'         => t('Weekend Night'),
-    '#default_value' => isset( $element['#value']['weekend_night'] ) ? $element['#value']['weekend_night'] : NULL
+    '#default_value' => isset( $element['#value']['weekend_night'] ) ? $element['#value']['weekend_night'] : NULL,
+    '#attributes'    => array( 'class' => 'rate-widget-rate-field' )
   );
   
   $element['weekly_rate'] = array(
     '#type'          => 'textfield',
-    '#title'         => t('Weekly Rate'),
-    '#default_value' => isset( $element['#value']['weekly_rate'] ) ? $element['#value']['weekly_rate'] : NULL
+    '#title'         => t('Weekly'),
+    '#default_value' => isset( $element['#value']['weekly_rate'] ) ? $element['#value']['weekly_rate'] : NULL,
+    '#attributes'    => array( 'class' => 'rate-widget-rate-field' )
   );
   
   $element['monthly_rate'] = array(
     '#type'          => 'textfield',
-    '#title'         => t('Monthly Rate'),
-    '#default_value' => isset( $element['#value']['monthly_rate'] ) ? $element['#value']['monthly_rate'] : NULL
+    '#title'         => t('Monthly'),
+    '#default_value' => isset( $element['#value']['monthly_rate'] ) ? $element['#value']['monthly_rate'] : NULL,
+    '#attributes'    => array( 'class' => 'rate-widget-rate-field' )
   );
   
   $element['minimum_stay'] = array(
     '#type'          => 'textfield',
-    '#title'         => t('Mimimum Stay'),
-    '#default_value' => isset( $element['#value']['minimum_stay'] ) ? $element['#value']['minimum_stay'] : NULL
+    '#title'         => t('Minimum Stay'),
+    '#default_value' => isset( $element['#value']['minimum_stay'] ) ? $element['#value']['minimum_stay'] : NULL,
+    '#attributes'    => array( 'class' => 'rate-widget-minimum-stay' )
   );
   
   return $element;

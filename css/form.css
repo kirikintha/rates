@@ -2,8 +2,35 @@
  * Node Form CSS
  * @todo make this look nicer on the form
  */
-div.rates-widget .form-item {
+form#node-form div.rates-widget {
+  border-bottom: 1px #CCC solid;
+  margin-bottom: 5px;
+  min-height:140px;
+}
+
+form#node-form div.rates-widget .form-item {
+  margin:0 0 0 10px;
   float:left;
-  margin:0 20px;
-  width:120px !important;
+}
+
+form#node-form div.rates-widget label {
+  font-size:10px;
+}
+
+form#node-form h4.rates-widget-title {
+  color: #02C4D0;
+  clear:both;
+}
+
+form#node-form input.rate-widget-begin-date,
+form#node-form input.rate-widget-end-date {
+  width:100px !important;
+}
+
+form#node-form input.rate-widget-minimum-stay {
+  width:190px !important;
+}
+
+form#node-form input.rate-widget-rate-field {
+  width:105px !important;
 }

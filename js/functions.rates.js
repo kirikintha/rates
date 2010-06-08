@@ -18,7 +18,7 @@ if (Drupal.jsEnabled) {
     function _rebindElements() {
       
       //When we blur the field, We have to sanity check here, that this date does not conflict with it's corresponding to/from date
-      $('div.rates-widget input.form-text').bind( 'change', function () {
+      $('div.rates-widget input.rate-widget-begin-date, div.rates-widget input.rate-widget-end-date').bind( 'change', function () {
         
         //Find out which field we are looking
         //Drupal.trace( $(this).parent('div').parent('div').children('div').children('input') );
@@ -35,7 +35,7 @@ if (Drupal.jsEnabled) {
           var end = inputs[1].value;
           endDate = new Date( end );
           
-          if ( start >= end ) { //If you have not entered in a valid set of dates
+          if ( start > end ) { //If you have not entered in a valid set of dates
             
             alert( Drupal.t('Sorry, but you must enter an End Date that is greater than the Begin Date.') );
             
