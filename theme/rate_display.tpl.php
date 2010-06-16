@@ -10,13 +10,15 @@
  */
 ?>
 <div class="property-rate" >
-
-  <?php print $begin_date; ?>
-  <?php print $end_date; ?>
-  <?php print $week_night; ?>
-  <?php print $weekend_night; ?>
-  <?php print $weekly_rate; ?>
-  <?php print $monthly_rate; ?>
-  <?php print $minimum_stay; ?>
-	
+  <table class="property-rate-table">
+    <tr>
+      <td class="begin-date"><?php print $begin_date; ?></td>
+      <td class="end-date"><?php print $end_date; ?></td>
+      <td class="week-night"><?php print $week_night; ?></td>
+      <td class="weekend-night"><?php print $weekend_night; ?></td>
+      <td class="weekly"><?php print $weekly_rate; ?></td>
+      <td class="monthly"><?php print $monthly_rate; ?></td>
+      <td class="minimum-stay"><?php print $minimum_stay; ?></td>
+    </tr>
+	</table>
 </div>

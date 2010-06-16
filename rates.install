@@ -4,10 +4,10 @@
  * @name _property_rates_notify()
  * Common function for notifying the content module of this module's existence
  */
-function _rates_notify() {
+function _rates_notify( $op = 'enable' ) {
   
   drupal_load( 'module', 'content' );
-  content_notify( 'enable', 'rates' );
+  content_notify( $op, 'rates' );
   
 }
 
@@ -16,7 +16,7 @@ function _rates_notify() {
  */
 function rates_install() {
   
-  _rates_notify();
+  _rates_notify( 'install' );
   
   drupal_set_message( t('Rates Module has installed successfully. Please see README.txt for more information on this module.') );
   
@@ -27,7 +27,7 @@ function rates_install() {
  */
 function rates_uninstall() {
   
-  _rates_notify();
+  _rates_notify( 'uninstall' );
   
   drupal_set_message( t('Rates Module uninstalled successfully. You have not deleted any content, this has to be performed on your own.') );
   
@@ -38,7 +38,7 @@ function rates_uninstall() {
  */
 function rates_enable() {
   
-  _rates_notify();
+  _rates_notify( 'enable' );
   
   drupal_set_message( t('Rates Module has been enabled successfully.') );
   
@@ -49,7 +49,7 @@ function rates_enable() {
  */
 function rates_disable() {
   
-  _rates_notify();
+  _rates_notify( 'disable' );
   
   drupal_set_message( t('Rates Module has been disabled successfully.') );
   

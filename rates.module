@@ -25,7 +25,7 @@ function rates_theme() {
 		'rate_display' => array (
       'path'      => RATES_MODULE_PATH,
       'template'  => 'theme/rate_display',
-			'arguments' => array( 'begin_date'=> NULL, 'end_date'=> NULL, 'week_night'=> NULL, 'weekend_night'=> NULL, 'weekly_rate'=> NULL, 'mothly_rate'=> NULL, 'minimum_stay'=> NULL )
+			'arguments' => array( 'begin_date'=> NULL, 'end_date'=> NULL, 'week_night'=> NULL, 'weekend_night'=> NULL, 'weekly_rate'=> NULL, 'monthly_rate'=> NULL, 'minimum_stay'=> NULL )
 		),
     //CCK theme formatters.
     'rates_formatter_default' => array(
@@ -120,6 +120,8 @@ function rates_field_formatter_info() {
  *
  */
 function theme_rates_formatter_default( $element ) {
+  
+  //krumo( $element );
   
   if ( !empty( $element['#item']['begin_date'] ) && !empty( $element['#item']['end_date'] ) ) { //If we don't have a legitimate rate, then don't do it!
     
