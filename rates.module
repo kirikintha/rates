@@ -9,7 +9,7 @@ define( "RATES_MODULE_PATH", drupal_get_path( 'module', 'rates' ) );
 /**
  * Hook Init
  */
-function rates_init() { //load js calendar listener
+function rates_load_js() { //load js calendar listener
   
   drupal_add_js( RATES_MODULE_PATH. '/js/functions.rates.js','module','header' );
   
@@ -265,6 +265,9 @@ function rates_process( $element, $edit, $form_state, $form ) {
   
   //Load in necessary date_popup files
   date_popup_load();
+  
+  //Load JS
+  rates_load_js();
   
   //Form CSS
   drupal_add_css( RATES_MODULE_PATH . '/css/form.css' );
