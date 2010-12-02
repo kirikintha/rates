@@ -288,7 +288,7 @@ function rates_process( $element, $edit, $form_state, $form ) {
     'closeAtTop'      => FALSE,
     'speed'           => 'immediate',
     'dateFormat'      => date_popup_format_to_popup('m/d/Y', 'datepicker'),
-    'yearRange'       => '-0:+0'
+    'yearRange'       => '-0:+1'
   );  
   
   $element['begin_date'] = array(

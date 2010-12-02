@@ -35,7 +35,7 @@ if (Drupal.jsEnabled) {
           var end = inputs[1].value;
           endDate = new Date( end );
           
-          if ( start > end ) { //If you have not entered in a valid set of dates
+          if ( startDate > endDate ) { //If you have not entered in a valid set of dates
             
             alert( Drupal.t('Sorry, but you must enter an End Date that is greater than the Begin Date.') );
             
